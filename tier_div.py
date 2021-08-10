@@ -1,5 +1,6 @@
 # Divides a given tier into a given amount of divisions
 # Hyuk-Je Kwon: hyukjekwon@umass.edu
+# Developed in conjunction with Beat Detective: https://github.com/hyukjekwon/Beat_Detective/blob/patch-2/beat_detective.py
 # August 2021
 
 # args: file name, tier selected for division, number of divisions
