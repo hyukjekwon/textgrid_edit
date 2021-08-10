@@ -23,7 +23,7 @@ python3 tier_div.py file_name tier num_div
 After the script runs, it should print out a message telling you that the program worked successfully, and that a new tier was added.
 
 ## example:
-Let's say I want to add a tier for 16th triplets. The tier with 16th notes in it is tier 5, and I want to divide them by 3, so the appropriate command would be:
+Let's say I'm annotating Ms. Jackson by Outkast, and I want to add a tier for 16th triplets. The tier with 16th notes in it is tier 5, and I want to divide them by 3, so the appropriate command would be:
 ```
 python3 tier_div.py ms-jackson.TextGrid 5 3
 ```
