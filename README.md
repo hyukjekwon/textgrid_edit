@@ -4,7 +4,7 @@ A script designed for easier musicological annotation in TextGrid files.
 ## necessary packages:
 Use the command prompt to install the textgrid package for Python.
 ```
-pip3 install textgrid
+pip install textgrid
 ```
 
 ## purpose:
