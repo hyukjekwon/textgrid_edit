@@ -1,5 +1,5 @@
-# tier_div.py
-A script designed for musicological annotation in TextGrid files.
+# textgrid_edit.py
+A script designed for easier musicological annotation in TextGrid files.
 
 ## necessary packages:
 Use the command prompt to install the textgrid package for Python.
