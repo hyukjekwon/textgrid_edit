@@ -8,24 +8,38 @@ pip install textgrid
 ```
 
 ## purpose:
-The script takes a given interval tier in a TextGrid file, and divides it up evenly and creates a new tier for it. Designed as a tool for musicological annotation in Praat software. Developed in conjunction with beat_detective.py.
+Depending on the flags argument, you can either swap the position of two tiers, remove any given interval, or subdivide any tier into any number. Designed as a tool for musicological annotation in Praat software. Developed in conjunction with beat_detective.py.
 
 https://github.com/hyukjekwon/Beat_Detective/blob/patch-2/beat_detective.py
 
 ## parameters/usage:
-First, put the script and the desired TextGrid in the same file directory. Then run the following command with these parameters:
-- file_name: must be the name of a TextGrid file
-- tier: the number of the tier you want to divide up
-- num_div: the number of divisions you want to do
+file_name: name of a given TextGrid file
+
+For interval removal:
+  - tier: the number of the tier you want to remove from
+  - interval: the number of the interval you want to remove
 ```
-python3 tier_div.py file_name tier num_div
+python3 textgrid_edit.py file_name -r tier interval
+```
+For tier swapping:
+  - tier_no_1: the number of the 1st tier you want to swap
+  - tier_no_2: the number of the 2nd tier you want to swap
+```
+python3 textgrid_edit.py file_name -s tier_no_1 tier_no_2
+```
+For subdivision:
+  First, put the script and the desired TextGrid in the same file directory. Then run the following command with these parameters:
+  - tier: the number of the tier you want to divide up
+  - num_div: the number of divisions you want to do
+```
+python3 textgrid_edit.py file_name -d tier num_div
 ```
 After the script runs, it should print out a message telling you that the program worked successfully, and that a new tier was added.
 
 ## example:
 Let's say I'm already annotating Ms. Jackson by Outkast, and I want to add a tier for 16th triplets because the lyrics don't fit with standard 16ths. The tier with 16th notes in it is tier 5, and I want to divide them by 3, so the appropriate command would be:
 ```
-python3 tier_div.py ms-jackson.TextGrid 5 3
+python3 textgrid_edit.py ms-jackson.TextGrid -d 5 3
 ```
 Assuming the tiers are organized in the same way as pre-set by beat_detective.py, a message should print out:
 
