@@ -3,10 +3,14 @@
 # Developed in conjunction with Beat Detective: https://github.com/hyukjekwon/Beat_Detective/blob/patch-2/beat_detective.py
 # Last Updated June 2022
 
-# args: file name, flags (-r, -s, -d)
+# args: file name, flags (-r, -s, -m, -mm, -d)
 # -r tier_no interval_no
 # -s tier_no_1 tier_no_2
+# -m tier_no destination
+# -mm front_of_selection back_of_selection destination
 # -d tier_no num_divisions
+
+# check README for usage examples
 
 import sys
 import math
@@ -48,6 +52,11 @@ def remove_interval(f_name, tier, interval):
                 elif i not in list(range(indices[0], indices[1])):
                     file.write(row)
 
+# for debugging
+def print_tiers(tg):
+    for t in tg:
+        print(t)
+
 # swap two tiers in textgrid
 def swap_tier(tg, num1, num2):
     tg_lst = []
@@ -59,6 +68,38 @@ def swap_tier(tg, num1, num2):
     tg_lst[num2] = temp
     for t in tg_lst:
         tg.append(t)
+
+# move one tier to a specific height
+def mov_tier(tg, idx, dest):
+    tg_lst = []
+    while tg:
+        t = tg.pop()
+        tg_lst = [t] + tg_lst
+    temp = tg_lst[idx]
+    tg_lst.remove(temp)
+    tg_lst.insert(dest, temp)
+    for t in tg_lst:
+        tg.append(t)
+
+# move multiple tiers to a specific height
+def mov_mult(tg, front, back, dest):
+    tg_lst = []
+    while tg:
+        t = tg.pop()
+        tg_lst = [t] + tg_lst
+    L = tg_lst[:front]
+    M = tg_lst[front:back + 1]
+    R = tg_lst[back + 1:]
+    tg_lst = L + R
+    new_lst = []
+    for i, t in enumerate(tg_lst):
+        if i == dest:
+            for m in M:
+                new_lst += [m]
+        new_lst += [t]
+    for t in new_lst:
+        tg.append(t)
+
 
 # add new tier of divided tier
 def div_tier(tg, tier, num_div):
@@ -125,9 +166,18 @@ if __name__ == '__main__':
             num_div = int(sys.argv[4]) # get number of divisions
             div_tier(tg, tier, num_div) # run division and add new tier
         elif flag == '-s': # swap
-            num1 = int(sys.argv[3])
-            num2 = int(sys.argv[4])
+            num1 = int(sys.argv[3]) - 1
+            num2 = int(sys.argv[4]) - 1
             swap_tier(tg, num1, num2)
-
+        elif flag == '-m': # move single tier
+            idx = int(sys.argv[3]) - 1
+            dest = int(sys.argv[4]) - 1
+            mov_tier(tg, idx, dest)
+        elif flag == '-mm': # move multiple tiers
+            front = int(sys.argv[3]) - 1
+            back = int(sys.argv[4]) - 1
+            dest = int(sys.argv[5]) - 1
+            mov_mult(tg, front, back, dest)
+        
         # # write state to a new TextGrid file
         tg.write('new_' + tg_name)
