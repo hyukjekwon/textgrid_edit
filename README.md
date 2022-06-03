@@ -27,6 +27,19 @@ For tier swapping:
 ```
 python3 textgrid_edit.py file_name -s tier_no_1 tier_no_2
 ```
+For moving a single tier:
+  - tier_no: the number of the tier you want to move
+  - destination: the number of the position you want to move the tier to
+```
+python3 textgrid_edit.py file_name -m tier_no destination
+```
+For moving a multiple tiers:
+  - front: the highest of the tiers you want to move
+  - back: the lowest of the tiers you want to move
+  - destination: the number of the position you want to move the tier to
+```
+python3 textgrid_edit.py file_name -mm front back destination
+```
 For subdivision:
   First, put the script and the desired TextGrid in the same file directory. Then run the following command with these parameters:
   - tier: the number of the tier you want to divide up
