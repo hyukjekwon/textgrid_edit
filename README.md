@@ -1,5 +1,10 @@
 # textgrid_edit.py
 A script designed for easier musicological annotation in TextGrid files.
+It can be used to do any of the following:
+  - removing individual intervals (in the case of interval overlap)
+  - swapping the positions of two tiers
+  - moving the positions of single/multiple tiers
+  - dividing the intervals of a tier by any specified amount
 
 ## necessary packages:
 Use the command prompt to install the textgrid package for Python.
