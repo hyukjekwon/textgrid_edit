@@ -33,7 +33,7 @@ For moving a single tier:
 ```
 python3 textgrid_edit.py file_name -m tier_no destination
 ```
-For moving a multiple tiers:
+For moving multiple tiers:
   - front: the highest of the tiers you want to move
   - back: the lowest of the tiers you want to move
   - destination: the number of the position you want to move the tier to
