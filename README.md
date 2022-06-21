@@ -64,11 +64,8 @@ Let's say I'm already annotating Ms. Jackson by Outkast, and I want to add a tie
 ```
 python3 textgrid_edit.py ms-jackson.TextGrid -d 5 3
 ```
-Assuming the tiers are organized in the same way as pre-set by beat_detective.py, a message should print out:
 
-*"The 16th triplets tier has been added."*
-
-And the new file will be created, named "new_ms-jackson.TextGrid"
+For all of these operations, a new file with the changes will be created, named "new_filename.TextGrid"
 
 ## contact:
 Email me for any questions: hyukjekwon@umass.edu
