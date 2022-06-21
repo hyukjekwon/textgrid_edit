@@ -26,6 +26,11 @@ For interval removal:
 ```
 python3 textgrid_edit.py file_name -r tier interval
 ```
+For tier removal:
+  - tier: the number of the tier you want to remove
+```
+python3 textgrid_edit.py file_name -rt tier
+```
 For tier swapping:
   - tier_no_1: the number of the 1st tier you want to swap
   - tier_no_2: the number of the 2nd tier you want to swap
