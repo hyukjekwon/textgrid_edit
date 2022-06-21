@@ -26,6 +26,11 @@ For interval removal:
 ```
 python3 textgrid_edit.py file_name -r tier interval
 ```
+For tier removal:
+  - tier: the number of the tier you want to remove
+```
+python3 textgrid_edit.py file_name -rt tier
+```
 For tier swapping:
   - tier_no_1: the number of the 1st tier you want to swap
   - tier_no_2: the number of the 2nd tier you want to swap
@@ -59,11 +64,8 @@ Let's say I'm already annotating Ms. Jackson by Outkast, and I want to add a tie
 ```
 python3 textgrid_edit.py ms-jackson.TextGrid -d 5 3
 ```
-Assuming the tiers are organized in the same way as pre-set by beat_detective.py, a message should print out:
 
-*"The 16th triplets tier has been added."*
-
-And the new file will be created, named "new_ms-jackson.TextGrid"
+For all of these operations, a new file with the changes will be created, named "new_filename.TextGrid"
 
 ## contact:
 Email me for any questions: hyukjekwon@umass.edu
