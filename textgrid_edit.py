@@ -157,39 +157,49 @@ def div_tier(tg, tier_no, num_div):
 
 if __name__ == '__main__':
     tg_name = sys.argv[1]
-    flag = sys.argv[2]
-    if flag == '-r':
-        tier = int(sys.argv[3]) # get tier number
-        interval = int(sys.argv[4]) # get interval number
-        remove_interval(tg_name, tier, interval)
-    else:
-        tg = textgrid.TextGrid.fromFile(tg_name)
-        if flag == '-rt': # remove a given tier
-            tier = int(sys.argv[3]) - 1 # get tier number
-            remove_tier(tg, tier)
-        elif flag == '-d': # division
-            tier = int(sys.argv[3]) - 1 # get tier number
-            num_div = int(sys.argv[4]) # get number of divisions
-            div_tier(tg, tier, num_div) # run division and add new tier
-        elif flag == '-s': # swap
-            num1 = int(sys.argv[3]) - 1
-            num2 = int(sys.argv[4]) - 1
-            swap_tier(tg, num1, num2)
-        elif flag == '-m': # move single tier
-            idx = int(sys.argv[3]) - 1
-            dest = int(sys.argv[4]) - 1
-            mov_tier(tg, idx, dest)
-        elif flag == '-mm': # move multiple tiers
-            front = int(sys.argv[3]) - 1
-            back = int(sys.argv[4]) - 1
-            dest = int(sys.argv[5]) - 1
-            mov_mult(tg, front, back, dest)
-        elif flag == '-mi': # move intervals
-            srctier = int(sys.argv[3]) - 1
-            destier = int(sys.argv[4]) - 1
-            itvl1 = int(sys.argv[5]) - 1
-            itvl2 = int(sys.argv[5]) - 1
-            mov_intervals(tg, srctier, destier, (itvl1, itvl2))
-        
-        # write state to a new TextGrid file
-        tg.write('new_' + tg_name)
+    if tg_name == '-help':
+        s = 'python3 textgrid_edit.py filename'
+        print(s + ' -r tier_# interval_#:\n        remove a single interval from a tier\n')
+        print(s + ' -rt tier_#:\n        remove an entire tier from the textgrid\n')
+        print(s + ' -d tier_# divisor:\n        divide each interval in a tier by the divisor\n')
+        print(s + ' -s tier_1 tier_2:\n        swap the position of two tiers\n')
+        print(s + ' -m tier_# destination:\n        move the position of a given tier\n')
+        print(s + ' -mm top_tier bottom_tier destination:\n        move multiple tiers\n')
+        print(s + ' -mi src_tier des_tier itvl1 itvl2:\n        move intervals from one tier to another\n')
+    if len(sys.argv) > 2:
+        flag = sys.argv[2]
+        if flag == '-r':
+            tier = int(sys.argv[3]) # get tier number
+            interval = int(sys.argv[4]) # get interval number
+            remove_interval(tg_name, tier, interval)
+        else:
+            tg = textgrid.TextGrid.fromFile(tg_name)
+            if flag == '-rt': # remove a given tier
+                tier = int(sys.argv[3]) - 1 # get tier number
+                remove_tier(tg, tier)
+            elif flag == '-d': # division
+                tier = int(sys.argv[3]) - 1 # get tier number
+                num_div = int(sys.argv[4]) # get number of divisions
+                div_tier(tg, tier, num_div) # run division and add new tier
+            elif flag == '-s': # swap
+                num1 = int(sys.argv[3]) - 1
+                num2 = int(sys.argv[4]) - 1
+                swap_tier(tg, num1, num2)
+            elif flag == '-m': # move single tier
+                idx = int(sys.argv[3]) - 1
+                dest = int(sys.argv[4]) - 1
+                mov_tier(tg, idx, dest)
+            elif flag == '-mm': # move multiple tiers
+                front = int(sys.argv[3]) - 1
+                back = int(sys.argv[4]) - 1
+                dest = int(sys.argv[5]) - 1
+                mov_mult(tg, front, back, dest)
+            elif flag == '-mi': # move intervals
+                srctier = int(sys.argv[3]) - 1
+                destier = int(sys.argv[4]) - 1
+                itvl1 = int(sys.argv[5]) - 1
+                itvl2 = int(sys.argv[5]) - 1
+                mov_intervals(tg, srctier, destier, (itvl1, itvl2))
+            
+            # write state to a new TextGrid file
+            tg.write('new_' + tg_name)
