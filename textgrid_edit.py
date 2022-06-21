@@ -5,15 +5,16 @@
 
 # args: file name, flags (-r, -s, -m, -mm, -d)
 # -r tier_no interval_no
+# -rt tier_no
 # -s tier_no_1 tier_no_2
 # -m tier_no destination
 # -mm front_of_selection back_of_selection destination
+# -mi tier_no destination first_interval last_interval
 # -d tier_no num_divisions
 
 # check README for usage examples
 
 import sys
-import math
 import textgrid #http://github.com/kylebgorman/textgrid/
 
 # edits file to remove selected interval from selected tier
@@ -100,56 +101,59 @@ def mov_mult(tg, front, back, dest):
     for t in new_lst:
         tg.append(t)
 
+# move intervals to specified tier
+def mov_intervals(tg, source, target, rg):
+    srctier = tg[source]
+    tartier = tg[target]
+    buf = []
+    for i in range(rg[1] - rg[0]):
+        buf += [srctier[i + rg[0]]]
+    for b in buf:
+        collision = tartier.intervalContaining((b.minTime + b.maxTime)/2)
+        if collision:
+            tartier.removeInterval(collision)
+        tartier.addInterval(b)
+        srctier.removeInterval(b)
+
+# helper for div_tier
+def insert_tier(tg, tier, idx):
+    buf = []
+    while tg:
+        buf.append(tg.pop())
+    buf = buf[::-1]
+    buf.insert(idx, tier)
+    for b in buf:
+        tg.append(b)
+
+# removes a given tier
+def remove_tier(tg, tier_no):
+    buf = []
+    while tg:
+        buf.append(tg.pop())
+    buf = buf[::-1]
+    del buf[tier_no]
+    for b in buf:
+        tg.append(b)
 
 # add new tier of divided tier
-def div_tier(tg, tier, num_div):
-    # calculate what kind of intervals are being divided
-    # i.e. 8 if tier 4 is selected, 16 if tier 5 is selected
-    itvl_type = int(math.pow(2, tier))
-
-    # TextGrid duration
-    tg_len = tg[tier][len(tg[tier]) - 1].maxTime
-
-    # create new tier name
-    if num_div % 2 == 0:
-        tier_name = str(num_div * itvl_type) + 'ths'
-    elif num_div == 3:
-        tier_name = str(itvl_type) + 'th triplets'
-    else:
-        tier_name = 'new'
-
-    # create new tier for annotation
-    new_tier = textgrid.IntervalTier(name=tier_name)
-
-    # get first downbeat in megaseconds
-    first_downbeat = int(tg[tier][0].maxTime * 100000)
-
-    # get duration between primary intervals in given tier
-    itvl_dur = tg[tier][1].maxTime - tg[tier][0].maxTime
-
-    # get duration between secondary intervals in new tier
-    new_itvl_dur = itvl_dur / num_div
-
-    # get variables in megaseconds for the for loop
-    tg_len_Ms = int(tg_len * 100000)
-    itvl_dur_Ms = int(itvl_dur * 100000)
-
-    # iterate from the first downbeat to the end of the TextGrid, step: primary interval length
-    for i in range(first_downbeat, tg_len_Ms, itvl_dur_Ms):
-        i_s = float(i / 100000) # get current onset of primary interval in seconds
-        for j in range(num_div - 1): # iterate based on the given number of divisions
-            new_tier.addInterval(textgrid.Interval(i_s + (new_itvl_dur * j), i_s + (new_itvl_dur * (j + 1)), ''))
-
-    # add new tier to TextGrid state
-    temp = []
-    while tg:
-        t = tg.pop()
-        temp = [t] + temp
-    for i, t in enumerate(temp):
-        tg.append(t)
-        if i == tier:
-            tg.append(new_tier)
-    print('The ' + tier_name + ' tier has been added.')
+def div_tier(tg, tier_no, num_div):
+    def mega(num):
+        return int(num * 100000)
+    tier = tg[tier_no][1:]
+    newtier = textgrid.IntervalTier(str(tier_no + 1))
+    buf = []
+    for itvl in tier:
+        minTime = int(mega(itvl.minTime))
+        maxTime = int(mega(itvl.maxTime))
+        itvl_len = int((maxTime - minTime) / num_div)
+        for i in range(num_div):
+            buf.append(minTime + (i * itvl_len))
+    for i, b in list(enumerate(buf))[:-1]:
+        minTime = b / 100000
+        maxTime = buf[i + 1] / 100000
+        new_itvl = textgrid.Interval(minTime, maxTime, "")
+        newtier.addInterval(new_itvl)
+    insert_tier(tg, newtier, tier_no + 1)
 
 if __name__ == '__main__':
     tg_name = sys.argv[1]
@@ -160,8 +164,10 @@ if __name__ == '__main__':
         remove_interval(tg_name, tier, interval)
     else:
         tg = textgrid.TextGrid.fromFile(tg_name)
-
-        if flag == '-d': # division
+        if flag == '-rt': # remove a given tier
+            tier = int(sys.argv[3]) - 1 # get tier number
+            remove_tier(tg, tier)
+        elif flag == '-d': # division
             tier = int(sys.argv[3]) - 1 # get tier number
             num_div = int(sys.argv[4]) # get number of divisions
             div_tier(tg, tier, num_div) # run division and add new tier
@@ -178,6 +184,12 @@ if __name__ == '__main__':
             back = int(sys.argv[4]) - 1
             dest = int(sys.argv[5]) - 1
             mov_mult(tg, front, back, dest)
+        elif flag == '-mi': # move intervals
+            srctier = int(sys.argv[3]) - 1
+            destier = int(sys.argv[4]) - 1
+            itvl1 = int(sys.argv[5]) - 1
+            itvl2 = int(sys.argv[5]) - 1
+            mov_intervals(tg, srctier, destier, (itvl1, itvl2))
         
-        # # write state to a new TextGrid file
+        # write state to a new TextGrid file
         tg.write('new_' + tg_name)
